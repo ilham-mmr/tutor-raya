@@ -21,7 +21,7 @@ class TutoringResource extends JsonResource {
             'end_time' => $this->end_time,
             'hourly_price' => $this->hourly_price,
             'status' => $this->status,
-            'tutor' => new TutorResource($this->whenLoaded('tutor')),
+            'tutor' => new UserResource($this->whenLoaded('tutor')),
             'subject' => new SubjectResource($this->whenLoaded('subject')),
             'subjects_taught' => $this->when(Route::currentRouteName() == 'tutorings.show', [
                 $this->tutor->subjects
