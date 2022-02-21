@@ -55,4 +55,8 @@ class User extends Authenticatable {
             return $tutoring->subject->name;
         })->unique();
     }
+
+    public function favoriteTutors() {
+        return $this->belongsToMany(User::class, 'tutor_favorites', 'user_id', 'tutor_id');
+    }
 }
