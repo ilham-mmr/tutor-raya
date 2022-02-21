@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 
-class UserProfileController extends Controller
-{
+class UserProfileController extends Controller {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         dd('hi');
     }
 
@@ -22,8 +24,7 @@ class UserProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -33,9 +34,10 @@ class UserProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id) {
+        $user = User::where('is_tutor',false)->where('id', $id)->firstOrFail();
+        return  UserResource::make($user);
+
     }
 
     /**
@@ -45,9 +47,17 @@ class UserProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, User $user) {
+        $request->validate([
+            'about' => 'required',
+            'education' => 'required'
+        ]);
+
+        $user->about = $request->about;
+        $user->education = $request->education;
+        $user->save();
+
+        return  UserResource::make($user);
     }
 
     /**
@@ -56,8 +66,7 @@ class UserProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
 }

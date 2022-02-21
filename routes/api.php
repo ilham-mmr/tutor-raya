@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\TutoringController;
-use App\Http\Controllers\UserProfileController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TutorFavoritesController;
+use App\Http\Controllers\Api\TutoringController;
+use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,26 +17,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::apiResource('tutorings', TutoringController::class)->except('store', 'update', 'delete');
 
-// get user profile
-// update profile
 
-// add to favorite
+Route::get('login/{provider}', [AuthController::class, 'redirectToProvider'])->name('providerRedirect');
+// Route::get('login/{provider}/callback', [AuthController::class, 'handleProviderCallback'])->name('providerCallback');
+
+
+
+
 
 // book
 Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
-    // Route::resource('products', ProductController::class)->only(['store','update','destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    // Route::apiResource('users/profile', UserProfileController::class)->except('store', 'update', 'delete';
+
+
+    Route::apiResource('tutorings', TutoringController::class)->except('store', 'update', 'delete');
+
+    // favorite feature
+    Route::controller(TutorFavoritesController::class)->group(function () {
+        Route::get('/tutor-favorites', 'index');
+        Route::post('/tutor-favorites', 'store');
+        Route::put('/tutor-favorites', 'update');
+        Route::delete('/tutor-favorites/{id}', 'destroy');
+    });
+
+    // get user profile
+    Route::get('/users/{user}/profile', [UserProfileController::class, 'show']);
+    // update profile
+    Route::put('/users/{user}/profile', [UserProfileController::class, 'update']);
+
+    //booking
 
 
     // middleware isTutor
 
 });
-
-Route::get('login/{provider}', [AuthController::class, 'redirectToProvider'])->name('providerRedirect');
-Route::get('login/{provider}/callback', [AuthController::class, 'handleProviderCallback'])->name('providerCallback');
