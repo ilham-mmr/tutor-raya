@@ -53,6 +53,7 @@ Add Tutoring Session
                 </div>
                 <div class="row p-3">
                     <div class="col-lg-6">
+
                         <div class="form-group">
                             <label for="categoryDropdown">Category</label>
                             <select class="form-control" id="categoryDropdown" name="category">
@@ -71,6 +72,18 @@ Add Tutoring Session
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                placeholder="e.g learn maths with fun">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                placeholder="tell us what you're good at and teaching method"></textarea>
+
+                        </div>
                         <div class="form-group">
                             <label for="hourlyPrice">Hourly Price</label>
                             <div class="input-group mb-2 mr-sm-2">
@@ -81,6 +94,9 @@ Add Tutoring Session
                                     placeholder="e.g 50000">
                             </div>
                         </div>
+
+                    </div>
+                    <div class="col-lg-6">
                         <div style="overflow:hidden;">
                             <div class="form-group">
                                 <label for="datetimepicker">Starting date & time</label>
@@ -92,11 +108,6 @@ Add Tutoring Session
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-
-
-
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Teaching Hours</label>
                             <select class="form-control" id="hours" name="hours" disabled>
