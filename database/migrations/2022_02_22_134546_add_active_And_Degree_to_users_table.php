@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStatusAndDegreeToUsersTable extends Migration
+class AddActiveAndDegreeToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddStatusAndDegreeToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('active')->default(false);
-            $table->boolean('degree')->nullable();
+            $table->boolean('active')->default(false)->after('picture');
+            $table->string('degree')->nullable()->after('picture');
         });
     }
 
@@ -27,7 +27,8 @@ class AddStatusAndDegreeToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('active');
+            $table->dropColumn('degree');
         });
     }
 }
