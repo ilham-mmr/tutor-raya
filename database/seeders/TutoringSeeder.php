@@ -20,7 +20,8 @@ class TutoringSeeder extends Seeder
             'subject_id' => rand(1,3),
             'start_time' => Carbon::now(),
             'end_time' => Carbon::now()->addHour(1)->format('Y-m-d H:i:s'),
-            'hourly_price' => 60000
+            'hourly_price' => 60000,
+            'hourly_duration' => 1,
         ]);
 
         DB::table('tutorings')->insert([
@@ -28,7 +29,8 @@ class TutoringSeeder extends Seeder
             'subject_id' => rand(1,3),
             'start_time' => Carbon::now(),
             'end_time' => Carbon::now()->addHour(1)->format('Y-m-d H:i:s'),
-            'hourly_price' => 60000
+            'hourly_price' => 60000,
+            'hourly_duration' => 2,
         ]);
 
         DB::table('tutorings')->insert([
@@ -36,7 +38,8 @@ class TutoringSeeder extends Seeder
             'subject_id' => rand(1,3),
             'start_time' => Carbon::now(),
             'end_time' => Carbon::now()->addHour(1)->format('Y-m-d H:i:s'),
-            'hourly_price' => 60000
+            'hourly_price' => 60000,
+            'hourly_duration' => 1,
         ]);
     }
 }
