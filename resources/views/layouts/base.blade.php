@@ -17,6 +17,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{ asset('/assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('/assets/dist/css/adminlte.min.css') }}">
+    @yield('additional_css')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -152,7 +153,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 Tutor Dashboard
             </div>
             <!-- Default to the left -->
-            <strong> All rights reserved.
+            <strong> All rights reserved. </strong>
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -166,7 +167,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
 
-    <script>
+    @yield('additional_script')
+
+    @yield('custom_script')
+
+    {{-- <script>
         var toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
         var currentTheme = localStorage.getItem('theme');
         var mainHeader = document.querySelector('.main-header');
@@ -207,7 +212,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
 
         toggleSwitch.addEventListener('change', switchTheme, false);
-    </script>
+    </script> --}}
 </body>
 
 </html>
