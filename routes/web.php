@@ -27,7 +27,11 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('dashboard.home');
 
     Route::get('/home/tutor/profile', [HomeController::class, 'profile']);
-    Route::get('/home/tutor/add-tutoring', [HomeController::class, 'addTutoring']);
+    Route::post('/home/tutor/profile', [HomeController::class, 'storeProfile'])->name('web-profile.store');
+
+    Route::get('/home/tutor/add-tutoring', [HomeController::class, 'addTutoring'])->name('web-tutoring.create');
+    Route::post('/home/tutor/add-tutoring', [HomeController::class, 'storeTutoring'])->name('web-tutoring.store');
+
     Route::get('/home/tutor/view-tutoring', [HomeController::class, 'viewTutoring']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('web.logout');
