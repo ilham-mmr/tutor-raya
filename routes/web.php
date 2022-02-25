@@ -32,6 +32,10 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/home/tutor/add-tutoring', [HomeController::class, 'addTutoring'])->name('web-tutoring.create');
     Route::post('/home/tutor/add-tutoring', [HomeController::class, 'storeTutoring'])->name('web-tutoring.store');
 
+    Route::get('/home/tutor/edit-tutoring/{tutoring}', [HomeController::class, 'editTutoring'])->name('web-tutoring.edit');
+    Route::put('/home/tutor/edit-tutoring/{tutoring}', [HomeController::class, 'updateTutoring'])->name('web-tutoring.update');
+    Route::delete('/home/tutor/delete-tutoring/{tutoring}', [HomeController::class, 'deleteTutoring'])->name('web-tutoring.delete');
+
     Route::get('/home/tutor/view-tutoring', [HomeController::class, 'viewTutoring']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('web.logout');
