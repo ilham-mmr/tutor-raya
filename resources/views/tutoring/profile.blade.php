@@ -89,6 +89,11 @@ Profile
                         <input type="email" class="form-control" value="{{ $user->created_at->format('M d Y') }}"
                             disabled>
                     </div>
+                    <div class=" form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" name="phone" placeholder="e.g 0895123123" pattern="^08[0-9]{9,}$" value="{{ $user->phone_number }}" required>
+
+                    </div>
 
                 </div>
             </div>
