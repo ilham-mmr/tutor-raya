@@ -11,6 +11,16 @@ My Upcoming Tutoring
 @endsection
 
 @section('main-content')
+
+@if (session('message'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <p>{{ session('message') }}</p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
+
 <!-- THE CALENDAR -->
 <div class="row">
     <div class="col-md-4">
@@ -67,25 +77,63 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 
     // for go to nearest upcoming tutoring
     let goToEvents = {!! json_encode($events) !!}
-    console.log(goToEvents);
+    if(goToEvents.length === 0) {
+        container.className = "text-center"
+        container.innerHTML = "<p>Ooops! You don't have an upcoming tutoring! <p>";
+    }
     for (let i = 0; i < goToEvents.length; i++) {
-        let btn = document.createElement('button');
-        btn.innerHTML = `${goToEvents[i].title}`;
-        btn.className = "btn m-1 w-100"
-        btn.style.background = `${goToEvents[i].backgroundColor}`;
-        btn.addEventListener('click',function(){
+        let divCard = document.createElement('div');
+        divCard.className = `card w-100 ${i != 0 ? "collapsed-card" : ""}`;
+        divCard.innerHTML = `
+        <div class="card-header" style="background-color: ${goToEvents[i].backgroundColor};">
+                <h3 class="card-title text-white">
+                    ${goToEvents[i].title}
+                </h3>
+                <div class="card-tools">
+                  <a href="/home/tutor/edit-tutoring/${goToEvents[i].id}" class="btn btn-tool" title="edit this tutoring session">
+                    <i class="far fa-edit"></i>
+                  </a>
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+        </div>
+        <div class="card-body">
+            <dl class="row">
+
+                <dt class="col-sm-4">Category:</dt>
+                <dd class="col-sm-8">${goToEvents[i].category}</dd>
+
+                <dt class="col-sm-4">Subject:</dt>
+                <dd class="col-sm-8">${goToEvents[i].subject}</dd>
+
+                <dt class="col-sm-4">Start Time:</dt>
+                <dd class="col-sm-8">
+                    ${new Date(goToEvents[i].start).toLocaleDateString()} at ${new Date(goToEvents[i].start).toLocaleTimeString()}
+                    <i class="far fa-arrow-alt-circle-right"></i>
+                    </dd>
+
+                <dt class="col-sm-4">End Time:</dt>
+                <dd class="col-sm-8">${new Date(goToEvents[i].end).toLocaleDateString()} at ${new Date(goToEvents[i].end).toLocaleTimeString()}</dd>
+
+                <dt class="col-sm-4">Final Price:</dt>
+                <dd class="col-sm-8">Rp${goToEvents[i].final_price}</dd>
+            </dl>
+
+        </div>
+        `
+
+        let gotoElement = divCard.querySelector(".col-sm-8 > i");
+        gotoElement.style.cursor = 'pointer'
+        gotoElement.title = "go to the date"
+        gotoElement.addEventListener('click',function(){
            let date = new Date(goToEvents[i].start);
            calendar.gotoDate(date);
         })
-        container.appendChild(btn);
+        container.appendChild(divCard);
 
     }
-
-    // $('#test').on('click',function(){
-    //     // let the =
-    //     console.log(the);
-
-    // })
 
 </script>
 @endsection
