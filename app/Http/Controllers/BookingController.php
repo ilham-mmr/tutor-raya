@@ -25,7 +25,6 @@ class BookingController extends Controller {
             if ($booking->status == "ACCEPTED" && Carbon::now()->greaterThan($booking->tutoring->end_time)) {
                 $booking->status = 'FINISHED';
                 $booking->save();
-                continue;
             }
         }
 
@@ -63,7 +62,7 @@ class BookingController extends Controller {
                         $buttons .= sprintf($btnTemplate, $route . '?action=confirm', 'primary',  'CONFIRM');
                         $buttons .= sprintf($btnTemplate, $route . '?action=reject', 'danger',  'REJECT');
                     } else if ($booking->status == "FINISHED") {
-                        $buttons .= "<button class='btn btn-primary'  data-toggle='modal' data-target='#uploadActivityModal' data-id='{$booking->id}' target='_blank'><i class='fas fa-upload'></i></button>";
+                        $buttons .= "<button class='btn btn-primary' data-activity-description='{$booking->activity_description}'  data-toggle='modal' data-target='#uploadActivityModal' data-id='{$booking->id}' target='_blank'><i class='fas fa-upload'></i></button>";
 
                         // $buttons .= sprintf($btnTemplate, $route . '?action=upload_activity', 'info',  'UPLOAD ACTIVITY');
                     } else if ($booking->status == "ACCEPTED") {
@@ -94,7 +93,6 @@ class BookingController extends Controller {
 
     public function action(Request $request, Booking $booking) {
 
-
         switch ($request->action) {
             case 'confirm':
                 $booking->status = 'ACCEPTED';
@@ -103,11 +101,14 @@ class BookingController extends Controller {
                 $booking->status = 'DECLINED';
                 break;
             case 'upload_activity':
-                // upload photos
+                // upload photos handled by dropzone controller
+                $booking->activity_description = $request->activity_description;
                 break;
         }
         $booking->save();
-
+        if ($request->ajax()) {
+            return '/home/tutor/booked-sessions';
+        }
         return redirect()->route('booked-session.index')->with('message', 'nice');
     }
 

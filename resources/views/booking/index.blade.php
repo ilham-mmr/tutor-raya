@@ -43,37 +43,39 @@ Booked Sessions
 <div class="modal fade" id="uploadActivityModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form action="#" method="POST" enctype="multipart/form-data">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadActivityModalTitle">Upload Activity</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadActivityModalTitle">Upload Activity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea3">Describe Activity Done</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea3" rows="4"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="document">Activities</label>
-                        <div class="needsclick dropzone" id="document-dropzone">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="">Activity Description</label>
+                    <textarea class="form-control" id="activityDescription" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="document">Activities</label>
+                    <div class="needsclick dropzone" id="document-dropzone">
 
-                        </div>
-                        <div>
-                        </div>
                     </div>
-                    <input type="hidden" id="bookingId">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="uploadActivityModalBtn" class="btn btn-primary">Save changes</button>
+                <div class="form-group">
+                    <label for="document">Uploaded File</label>
+                    <div class="" id="uploaded-image">
+
+                    </div>
                 </div>
-        </form>
+                <input type="hidden" id="bookingActivityId" name="bookingActivityId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="uploadActivityModalBtn" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
     </div>
-</div>
 </div>
 
 
@@ -113,39 +115,8 @@ Booked Sessions
 </div>
 
 
-<!-- add meeting Modal -->
-<div class="modal fade" id="addMeetingLinkModal" tabindex="-1" role="dialog" aria-labelledby="addMeetingLinkModalTitle"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addMeetingLinkModalTitle">Meeting Link</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <input type="text" class="form-control" id="meetingLink" placeholder="Google Meet">
-                    </div>
-                    <div class="col-md-4 d-flex justify-content-around">
-                        <button type="button" class="btn btn-secondary" id="clipboard" onclick="copyText()"><i
-                                class="fas fa-clipboard"></i></button>
-                        <button type="button" class="btn btn-secondary" id="openLink" onclick="openLink()"><i
-                                class="fas fa-external-link-alt"></i></i></button>
 
-                    </div>
-                </div>
-                <input type="hidden" id="bookingId">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="addMeetingLinkModalBtn" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="row">
     <div class="col-sm-12">
@@ -332,11 +303,32 @@ function openLink() {
 }
 </script>
 <script>
-    var uploadedDocumentMap = {}
+    $('#uploadActivityModal').on('show.bs.modal', function(e) {
+    let link     = e.relatedTarget,
+        modal    = $(this),
+        id = link.dataset.id,
+        activityDescription = link.dataset.activityDescription;
+        console.log(link.dataset);
+
+    console.log(activityDescription);
+    modal.find("#bookingActivityId").val(id);
+    loadImages();
+    if(meetingLink) {
+        modal.find("#activityDescription").val(activityDescription);
+    }
+
+});
     Dropzone.options.documentDropzone = {
-      url: 'sdsd',
-      maxFilesize: 2, // MB
-      autoProcessQueue : false,
+      method: 'POST',
+      url: '{{ route('dropzone.upload') }}',
+      maxFilesize: 5, // MB
+      maxFiles: 5,
+      autoProcessQueue : true,
+      headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+      },
+      paramName:"images",
+      uploadMultiple:true,
       acceptedFiles: ".jpeg,.jpg,.png",
       init: function() {
           var submitButton = document.querySelector("#uploadActivityModalBtn");
@@ -350,9 +342,92 @@ function openLink() {
                   var _this = this
                   _this.removeAllFiles();
               }
+              loadImages();
 
           });
-      }
+
+          this.on("sending", function(file, xhr, formData){
+                let modal = $('#uploadActivityModal');
+                let id = modal.find("#bookingActivityId").val();
+                console.log(id);
+                formData.append('bookingId', id);
+            },)
+
+
+      },
+
+      error: function(file, message) {
+        console.log(message);
+      },
+      success: function (file, response) {
+        // $(file.previewTemplate).append('<span class="server_file">'+response.paths+'</span>');
+        console.log(file);
+    },
     }
+
+    function loadImages() {
+        let modal = $('#uploadActivityModal');
+        let id = modal.find("#bookingActivityId").val();
+        $.ajax({
+            url: '{{ route("dropzone.fetch") }}',
+            data: {'bookingId': id},
+            success: function(response) {
+                var content ="<p class='text-center'>You don't have activity's pictures uploaded</p>";
+                if(response.data) {
+                    content = response.data;
+                }
+                $('#uploaded-image').html(content);
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    }
+
+    $(document).on('click','.remove-image', function(){
+        let modal = $('#uploadActivityModal');
+        let bookingId = modal.find("#bookingActivityId").val();
+        var imageId = $(this).attr('id');
+        var text = $(this).val();
+        $(this).html('<div class="spinner-border text-danger"></div>')
+        $.ajax({
+            url:"{{ route('dropzone.delete') }}",
+            data: {bookingId:bookingId,imageId:imageId},
+            success: function(data) {
+                loadImages();
+
+            }
+        });
+    });
+</script>
+<script>
+$('#uploadActivityModalBtn').click(function (){
+   let modal = $('#uploadActivityModal');
+   let activityDescription = modal.find("#activityDescription").val();
+   let id = modal.find("#bookingActivityId").val();
+
+   console.log(activityDescription);
+
+   let csrf = "{{ csrf_token() }}"
+   let formData = {_method:"POST", _token:csrf, activity_description:activityDescription}; //Array
+    $.ajax({
+        url : `/home/tutor/booked-sessions/${id}?action=upload_activity`, // Url of backend (can be python, php, etc..)
+        type: "POST", // data type (can be get, post, put, delete)
+        data : formData, // data in json format
+        async : false, // enable or disable async (optional, but suggested as false if you need to populate data afterwards)
+        success: function(response, textStatus, jqXHR) {
+            console.log(response);
+            window.location.replace(response);
+        },
+        error: function (xhr) {
+            $('#uploadActivityModal').modal('hide');
+            $('#validationErrorsAlert').addClass('show');
+            $.each(xhr.responseJSON.errors, function(key,value) {
+                $('#validationErrors').append('<li>'+value+'</li>');
+            });
+
+        }
+    });
+   });
 </script>
 @endsection

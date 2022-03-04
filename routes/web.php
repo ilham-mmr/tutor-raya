@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\AuthController as ApiAuth;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\APIController;
+use App\Http\Controllers\DropzoneController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,5 +50,10 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('/home/tutor/booked-sessions/{booking}', [BookingController::class, 'action'])->name('booked-session.action');
 
     Route::post('/home/tutor/booked-sessions/{booking}/meeting-link', [BookingController::class, 'createMeetingLink'])->name('booked-session.meeting-link');
+
+
+    Route::post('activities/upload', [DropzoneController::class,'upload'])->name('dropzone.upload');
+    Route::get('activities/fetch', [DropzoneController::class,'fetch'])->name('dropzone.fetch');
+    Route::get('activities/delete', [DropzoneController::class,'delete'])->name('dropzone.delete');
 
 });
