@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\AuthController as ApiAuth;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\APIController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +38,16 @@ Route::middleware(['auth:web'])->group(function () {
     Route::put('/home/tutor/edit-tutoring/{tutoring}', [HomeController::class, 'updateTutoring'])->name('web-tutoring.update');
     Route::delete('/home/tutor/delete-tutoring/{tutoring}', [HomeController::class, 'deleteTutoring'])->name('web-tutoring.delete');
 
+
     Route::get('/home/tutor/view-tutoring', [HomeController::class, 'viewTutoring']);
 
+
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('web.logout');
+
+    Route::get('/home/tutor/booked-sessions', [BookingController::class, 'index'])->name('booked-session.index');
+    Route::post('/home/tutor/booked-sessions/{booking}', [BookingController::class, 'action'])->name('booked-session.action');
+
+    Route::post('/home/tutor/booked-sessions/{booking}/meeting-link', [BookingController::class, 'createMeetingLink'])->name('booked-session.meeting-link');
+
 });

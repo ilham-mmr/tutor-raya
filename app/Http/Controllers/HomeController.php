@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Tutoring;
 use Illuminate\Support\Str;
@@ -117,7 +119,7 @@ class HomeController extends Controller {
 
     public function viewTutoring() {
         // get valid tutorings
-        $tutorings = Auth::user()->tutorings()->with('subject.category')->whereDate('start_time', '>=', Carbon::today())->orderBy('start_time','ASC')->get();
+        $tutorings = Auth::user()->tutorings()->with('subject.category')->whereDate('start_time', '>=', Carbon::today())->orderBy('start_time', 'ASC')->get();
 
         $events = $tutorings->map(function ($tutoring) {
             return [
@@ -169,8 +171,8 @@ class HomeController extends Controller {
         $startTime = Carbon::parse($request->teachingDateTime)->setTimezone('Asia/Jakarta')->setSecond(0);
         $endTime = Carbon::parse($request->teachingDateTime)->setTimezone('Asia/Jakarta')->setSecond(0)->addHours($request->hours);
 
-
-        $overlappedTutorings = Auth::user()->tutorings()->ofBetween($startTime->toDateTimeString())->count();
+        // get overllaped tutorings which are not current tutoring
+        $overlappedTutorings = Auth::user()->tutorings()->ofBetween($startTime->toDateTimeString())->where('id', '!=', $tutoring->id)->count();
 
         if ($overlappedTutorings > 0) {
             return redirect()->back()->withErrors(['overlapped' => 'Oops! You already have a tutoring session on the given time']);
@@ -192,10 +194,12 @@ class HomeController extends Controller {
         $message = "the tutoring session has been deleted";
         $tutoring->delete();
 
-        if($request->ajax()) {
+        if ($request->ajax()) {
             Session::flash('message', $message);
             return "/home/tutor/view-tutoring";
         }
         return redirect('/home/tutor/view-tutoring')->with('message', $message);
     }
+
+
 }

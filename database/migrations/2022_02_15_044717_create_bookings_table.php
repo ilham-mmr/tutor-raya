@@ -17,11 +17,11 @@ class CreateBookingsTable extends Migration
             $table->id();
             $table->bigInteger('tutoring_id')->unsigned();
             $table->foreign('tutoring_id')->references('id')->on('tutorings')->onDelete('cascade');
-            $table->double('payment');
-            $table->string('payment_url');
+            $table->string('payment')->nullable();
+            $table->string('payment_url')->nullable();
             $table->text('review')->nullable();
-            $table->integer('rating');
-            $table->string('status');
+            $table->integer('rating')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

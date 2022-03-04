@@ -38,8 +38,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('dashboard.home') }}"
-                        class="nav-link
+                    <a href="{{ route('dashboard.home') }}" class="nav-link
                         {{ Request::is('home') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
@@ -56,21 +55,30 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="/home/tutor/profile" class="nav-link {{ Request::is('home/tutor/profile') ? 'active' : '' }}">
+                            <a href="/home/tutor/profile"
+                                class="nav-link {{ Request::is('home/tutor/profile') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Profile</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/home/tutor/add-tutoring" class="nav-link {{ Request::is('home/tutor/add-tutoring') ? 'active' : '' }}">
+                            <a href="/home/tutor/add-tutoring"
+                                class="nav-link {{ Request::is('home/tutor/add-tutoring') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Add Tutoring</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/home/tutor/view-tutoring" class="nav-link {{ Request::is('home/tutor/view-tutoring') ? 'active' : '' }}">
+                            <a href="/home/tutor/view-tutoring"
+                                class="nav-link {{ Request::is('home/tutor/view-tutoring') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>View Upcoming Tutoring</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/home/tutor/booked-sessions"  class="nav-link {{ Request::is('home/tutor/booked-sessions') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>My Booked Sessions</p>
                             </a>
                         </li>
                     </ul>
