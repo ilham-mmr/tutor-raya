@@ -109,7 +109,7 @@ class BookingController extends Controller {
         if ($request->ajax()) {
             return '/home/tutor/booked-sessions';
         }
-        return redirect()->route('booked-session.index')->with('message', 'nice');
+        return redirect()->route('booked-session.index')->with('message', 'The booked session has been updated');
     }
 
     public function createMeetingLink(Request $request, Booking $booking) {

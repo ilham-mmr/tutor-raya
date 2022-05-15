@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Api\AuthController as ApiAuth;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\DropzoneController;
@@ -19,17 +18,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return redirect('/home');
+});
+
+
 Route::middleware('guest')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'index'])->name('sign-in')->middleware('guest');
     Route::get('/sign-in/{provider}', [AuthController::class, 'redirectToProvider'])->name('auth.web');
-    Route::get('/api/login/{provider}/callback', [ApiAuth::class, 'handleProviderCallback'])->name('providerCallback');
+    Route::get('/sign-in/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+    // Route::get('/api/login/{provider}/callback', [ApiAuth::class, 'handleProviderCallback'])->name('providerCallback');
 });
 
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('dashboard.home');
 
-    Route::get('/home/tutor/profile', [HomeController::class, 'profile']);
+    Route::get('/home/tutor/profile', [HomeController::class, 'profile'])->name('profile');
     Route::post('/home/tutor/profile', [HomeController::class, 'storeProfile'])->name('web-profile.store');
 
     Route::get('/home/tutor/add-tutoring', [HomeController::class, 'addTutoring'])->name('web-tutoring.create');
@@ -57,3 +62,4 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('activities/delete', [DropzoneController::class,'delete'])->name('dropzone.delete');
 
 });
+

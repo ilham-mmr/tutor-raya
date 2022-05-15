@@ -16,8 +16,19 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller {
     public function index() {
+        $user = Auth::user();
+        $totalTutorings = count($user->tutorings()->whereDate('start_time', '>=', Carbon::today())->get());
 
-        return view('dashboard.index');
+        $tutorings = Auth::user()->tutorings()->select('id')->get();
+        $tutorTutoringsId = $tutorings->toArray();
+        $bookingsQuery = Booking::with(['user:id,name,phone_number', 'tutoring.subject'])->whereIn('tutoring_id', $tutorTutoringsId);
+
+        $totalBookings = $bookingsQuery->count();
+
+        $totalEarnings = $bookingsQuery->where('STATUS', 'FINISHED')->get()->sum(function ($item) {
+            return $item->tutoring->hourly_price * $item->tutoring->hourly_duration;
+        });
+        return view('dashboard.index', compact('totalTutorings','totalBookings','totalEarnings'));
     }
 
     public function profile() {
@@ -187,7 +198,7 @@ class HomeController extends Controller {
             'end_time' => $endTime,
             'hourly_duration' => $request->hours,
         ]);
-        return redirect('/home/tutor/view-tutoring')->with('message', "the sessoin has been updated");
+        return redirect('/home/tutor/view-tutoring')->with('message', "the tutoring session has been updated");
     }
 
     public function deleteTutoring(Request $request, Tutoring $tutoring) {
@@ -200,6 +211,4 @@ class HomeController extends Controller {
         }
         return redirect('/home/tutor/view-tutoring')->with('message', $message);
     }
-
-
 }

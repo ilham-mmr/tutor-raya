@@ -29,6 +29,55 @@ class AuthController extends Controller {
 
         return Socialite::driver($provider)->with(['state' => 'is_web=true'])->redirect();
     }
+    /**
+     * Obtain the user information from Provider.
+     *
+     * @param $provider
+     * @return JsonResponse
+     */
+    public function handleProviderCallback(Request $request, $provider) {
+
+        // $state = $request->input('state');
+        // parse_str($state, $result);
+        // $is_web = $result['is_web'] ?? false;
+
+        $validated = $this->validateProvider($provider);
+        if (!is_null($validated)) {
+            return $validated;
+        }
+        try {
+            $user = Socialite::driver($provider)->stateless()->user();
+        } catch (ClientException $exception) {
+            return response()->json(['error' => 'Invalid credentials provided.'], 422);
+        }
+
+        $userCreated = User::firstOrCreate(
+            [
+                'email' => $user->getEmail()
+            ],
+            [
+                'email_verified_at' => now(),
+                'name' => $user->getName(),
+
+            ]
+        );
+        $userCreated->providers()->updateOrCreate(
+            [
+                'provider' => $provider,
+                'provider_id' => $user->getId(),
+            ],
+            [
+                'avatar' => $user->getAvatar()
+            ]
+        );
+        Auth::login($userCreated, true);
+
+        return redirect()->route('dashboard.home');
+
+        // $token = $userCreated->createToken('tutor-raya')->plainTextToken;
+
+        // return response()->json($token, 200, ['Access-Token' => $token]);
+    }
 
     /**
      * @param $provider
@@ -36,7 +85,7 @@ class AuthController extends Controller {
      */
     protected function validateProvider($provider) {
         if (!in_array($provider, ['facebook', 'google'])) {
-            return redirect()->route('sign-in')->with('message','Ooops, There is an error');
+            return redirect()->route('sign-in')->with('message', 'Ooops, There is an error');
         }
     }
 
@@ -54,6 +103,6 @@ class AuthController extends Controller {
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('sign-in')->with('message','You are logged out!');
+        return redirect()->route('sign-in')->with('message', 'You are logged out!');
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Log in</title>
+    <title>Tutor Raya </title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -19,15 +19,15 @@
 
     <div class="login-box">
         @if (Session::has('message'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{{ session('message') }}</strong> Try again
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>{{ session('message') }}</strong> Try again
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         @endif
         <div class="login-logo">
-            <a href="../../index2.html"><b>Admin</b>LTE</a>
+            <img src="{{URL::asset('assets/images/logo.png')}}" />
         </div>
 
         <div class="card">
@@ -37,19 +37,19 @@
                 <div class="social-auth-links text-center mb-3">
                     <p>- -</p>
                     <a href="{{ route('auth.web', 'facebook') }}" class="btn btn-block btn-primary">
-                        <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+                        <i class="fab fa-facebook mr-2"></i> Sign in using Facebook (under development)
                     </a>
                     <a href="{{ route('auth.web', 'google') }}" class="btn btn-block btn-danger">
-                        <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                        <i class="fab fa-google mr-2"></i> Sign in using Google
                     </a>
                 </div>
 
                 {{-- <p class="mb-1">
                     <a href="forgot-password.html">I forgot my password</a>
                 </p> --}}
-                <p class="mb-0">
+                {{-- <p class="mb-0">
                     <a href="#" class="text-center">Register a new membership</a>
-                </p>
+                </p> --}}
             </div>
 
         </div>

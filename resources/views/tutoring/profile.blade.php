@@ -37,7 +37,7 @@ Profile
                             @if ($user->picture)
                                 {{ asset('storage/'.$user->picture) }}
                             @else
-                            https://i.pinimg.com/236x/7d/1a/3f/7d1a3f77eee9f34782c6f88e97a6c888--no-face-facebook-profile.jpg
+                            {{asset('assets/images/blank-profile.png') }}
                             @endif
                             " class="img-circle elevation-2" width='350px' height="350px" alt="Cinque Terre">
 

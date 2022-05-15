@@ -22,7 +22,8 @@ class UserResource extends JsonResource
             'education' => $this->education,
             'picture' => $this->picture,
             'is_tutor' => $this->is_tutor,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'subject' => new SubjectResource($this->whenLoaded('subject'))
         ];
     }
 }
