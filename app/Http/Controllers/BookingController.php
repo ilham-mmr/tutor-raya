@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Midtrans\Snap;
+use  Midtrans\Config;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -122,5 +125,66 @@ class BookingController extends Controller {
             Session::flash('message', 'meeting link has been saved');
         }
         return '/home/tutor/booked-sessions';
+    }
+
+
+    public function book(Request $request) {
+
+        //tutoring_id
+        // user_id
+        // payment_url
+        // status = REQUESTED
+
+        // $request->validate(
+        //     [
+        //         'tutoring_id' => 'required',
+        //         'user_id' => 'required',
+        //         'payment_url' => 'required',
+        //     ]
+        // );
+
+
+        //create booking
+
+        // $booking = Booking::create([
+        //     'tutoring_id' => $request->tutoring_id,
+        //     'total_price' => $request->total_price,
+        //     'status' => 'REQUESTED',
+        //     'user_id' => $request->user_id,
+        // ]);
+
+        //config midtrans
+        Config::$serverKey = config('services.midtrans.serverKey');
+        Config::$isProduction = config('services.midtrans.isProduction');
+        Config::$isSanitized = config('services.midtrans.isSanitized');
+        Config::$is3ds = config('services.midtrans.is3ds');
+
+        // setup variable midtrans
+        $midtrans = [
+            'transaction_details' => [
+                'order_id' => 'TR-' . '22', // LUX-100
+                'gross_amount' => (int) 223
+            ],
+            'customer_details' => [
+                'first_name' => 'ilham',
+                'email' => 'ilham.mmr@gmail.com',
+            ],
+            'enabled_payments' => ['gopay', 'bank_transfer'],
+            'vtweb' => []
+        ];
+
+         // payment process
+         try
+         {
+             // Get Snap Payment Page URL
+             $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
+            //  $transaction->payment_url = $paymentUrl;
+            //  $transaction->save();
+             return redirect($paymentUrl);
+         }
+         catch (Exception $e)
+         {
+             echo $e->getMessage();
+         }
     }
 }

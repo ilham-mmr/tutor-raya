@@ -42,4 +42,12 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI')
     ],
 
+    'midtrans' => [
+        'serverKey' => env('MIDTRANS_SERVER_KEY'),
+        'clientKey' => env('MIDTRANS_CLIENT_KEY'),
+        'isSanitized' => env('MIDTRANS_IS_SANITIZED', false),
+        'isProduction' => env('MIDTRANS_IS_PRODUCTION', false),
+        'is3ds' => env('MIDTRANS_IS_3DS', false),
+    ]
+
 ];

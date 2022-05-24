@@ -33,12 +33,14 @@ Route::post('login/mobile', [AuthMobileController::class, 'loginMobile']);
     Route::get('/tutors/{tutor}', 'detailTutors');
 });
 
+Route::apiResource('tutorings', TutoringController::class)->except('store', 'update', 'delete');
+
+
 // book
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthMobileController::class, 'logout']);
 
 
-    Route::apiResource('tutorings', TutoringController::class)->except('store', 'update', 'delete');
 
     Route::get('/categories', [CategoryController::class, 'index']);
 

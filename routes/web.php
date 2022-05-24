@@ -22,8 +22,14 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
+Route::get('/book', [BookingController::class, 'book']);
+
+
+
+
 
 Route::middleware('guest')->group(function () {
+
     Route::get('/sign-in', [AuthController::class, 'index'])->name('sign-in')->middleware('guest');
     Route::get('/sign-in/{provider}', [AuthController::class, 'redirectToProvider'])->name('auth.web');
     Route::get('/sign-in/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
@@ -57,9 +63,11 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('/home/tutor/booked-sessions/{booking}/meeting-link', [BookingController::class, 'createMeetingLink'])->name('booked-session.meeting-link');
 
 
-    Route::post('activities/upload', [DropzoneController::class,'upload'])->name('dropzone.upload');
-    Route::get('activities/fetch', [DropzoneController::class,'fetch'])->name('dropzone.fetch');
-    Route::get('activities/delete', [DropzoneController::class,'delete'])->name('dropzone.delete');
+    Route::post('activities/upload', [DropzoneController::class, 'upload'])->name('dropzone.upload');
+    Route::get('activities/fetch', [DropzoneController::class, 'fetch'])->name('dropzone.fetch');
+    Route::get('activities/delete', [DropzoneController::class, 'delete'])->name('dropzone.delete');
+
+
 
 });
 
