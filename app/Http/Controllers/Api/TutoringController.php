@@ -9,13 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Resources\TutoringResource;
 
-class TutoringController extends Controller {
+class TutoringController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
 
         // name, avatar,hourly price, subject, category, start_time, end_time
         // $result = User::whereHas('tutorings', function ($query) {
@@ -54,7 +56,8 @@ class TutoringController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //
         // date , time
     }
@@ -65,7 +68,8 @@ class TutoringController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         $result =  Tutoring::with(['tutor', 'subject.category',])
             ->where('id', $id)
             ->where('status', 'AVAILABLE')->firstOrFail();
@@ -80,7 +84,8 @@ class TutoringController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
@@ -90,9 +95,35 @@ class TutoringController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //
     }
 
+    public function getLessons(Request $request)
+    {
+        // $request->validate([
+        //     'user_id' => 'required',
+        // ]);
 
+        $bookings = User::find(11)->bookings()->with(['tutoring.subject.category'])->get();
+        $data['lessons'] = $bookings->map(function ($booking) {
+            return [
+                'id' => $booking->id,
+                'total_price' => $booking->total_price,
+                'start_time' => $booking->tutoring->start_time,
+                'end_time' => $booking->tutoring->end_time,
+                'title' => $booking->tutoring->title,
+                'status' => $booking->status,
+                'subject' => $booking->tutoring->subject->name,
+                'category' => $booking->tutoring->subject->category->name,
+                'meeting_link' => $booking->meeting_link,
+                'tutor' =>$booking->tutoring->tutor->name,
+                'picture' => $booking->tutoring->tutor->picture,
+                'phone_number' =>$booking->tutoring->tutor->phone_number,
+            ];
+        });
+
+        return $data;
+    }
 }

@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 
-class BookingController extends Controller {
-    public function index(Request $request) {
+class BookingController extends Controller
+{
+    public function index(Request $request)
+    {
 
 
         $tutorings = Auth::user()->tutorings()->select('id')->get();
@@ -94,7 +96,8 @@ class BookingController extends Controller {
         return view('booking.index');
     }
 
-    public function action(Request $request, Booking $booking) {
+    public function action(Request $request, Booking $booking)
+    {
 
         switch ($request->action) {
             case 'confirm':
@@ -115,7 +118,8 @@ class BookingController extends Controller {
         return redirect()->route('booked-session.index')->with('message', 'The booked session has been updated');
     }
 
-    public function createMeetingLink(Request $request, Booking $booking) {
+    public function createMeetingLink(Request $request, Booking $booking)
+    {
         $request->validate([
             'meeting_link' => 'url'
         ]);
@@ -128,7 +132,8 @@ class BookingController extends Controller {
     }
 
 
-    public function book(Request $request) {
+    public function bookWithPaymentGateway(Request $request)
+    {
 
         //tutoring_id
         // user_id
@@ -173,18 +178,17 @@ class BookingController extends Controller {
             'vtweb' => []
         ];
 
-         // payment process
-         try
-         {
-             // Get Snap Payment Page URL
-             $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
+        // payment process
+        try {
+            // Get Snap Payment Page URL
+            $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
             //  $transaction->payment_url = $paymentUrl;
             //  $transaction->save();
-             return redirect($paymentUrl);
-         }
-         catch (Exception $e)
-         {
-             echo $e->getMessage();
-         }
+            return redirect($paymentUrl);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
+
+
 }

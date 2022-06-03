@@ -8,13 +8,15 @@ use Illuminate\Routing\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
-class UserProfileController extends Controller {
+class UserProfileController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         dd('hi');
     }
 
@@ -24,7 +26,8 @@ class UserProfileController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //
     }
 
@@ -34,10 +37,10 @@ class UserProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        $user = User::where('is_tutor',false)->where('id', $id)->firstOrFail();
+    public function show($id)
+    {
+        $user = User::where('is_tutor', false)->where('id', $id)->firstOrFail();
         return  UserResource::make($user);
-
     }
 
     /**
@@ -47,14 +50,21 @@ class UserProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user) {
+    public function update(Request $request, User $user)
+    {
         $request->validate([
             'about' => 'required',
-            'education' => 'required'
+            'education' => 'required',
+            // 'phone_number' => 'required'
         ]);
+
+        // print($request->phone_number);
 
         $user->about = $request->about;
         $user->education = $request->education;
+        if ($request->phone_number !== null) {
+            $user->phone_number = $request->phone_number;
+        }
         $user->save();
 
         return  UserResource::make($user);
@@ -66,7 +76,8 @@ class UserProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //
     }
 }

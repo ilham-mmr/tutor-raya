@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'education' => $this->education,
             'picture' => $this->picture,
             'is_tutor' => $this->is_tutor,
+            'phone_number' =>$this->phone_number,
             'created_at' => $this->created_at,
             'subject' => new SubjectResource($this->whenLoaded('subject'))
         ];

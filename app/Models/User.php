@@ -42,6 +42,10 @@ class User extends Authenticatable {
         'email_verified_at' => 'datetime',
     ];
 
+    public function bookings() {
+        return $this->hasMany(Booking::class, 'user_id', 'id');
+    }
+
     public function providers() {
         return $this->hasMany(Provider::class, 'user_id', 'id');
     }
@@ -57,6 +61,6 @@ class User extends Authenticatable {
     }
 
     public function favoriteTutors() {
-        return $this->belongsToMany(User::class, 'tutor_favorites', 'user_id', 'tutor_id');
+        return $this->belongsToMany(User::class, 'tutor_favorites', 'user_id', 'tutor_id')->withPivot('is_favorite');
     }
 }

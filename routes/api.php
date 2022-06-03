@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthMobileController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\TutorFavoritesController;
 use App\Http\Controllers\Api\TutoringController;
 use App\Http\Controllers\Api\UserProfileController;
@@ -27,13 +28,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('login/mobile', [AuthMobileController::class, 'loginMobile']);
- //tutor
- Route::controller(TutorAPIController::class)->group(function () {
-    Route::get('/tutors', 'getTutors');
-    Route::get('/tutors/{tutor}', 'detailTutors');
-});
+
 
 Route::apiResource('tutorings', TutoringController::class)->except('store', 'update', 'delete');
+
+Route::get('/lessons', [TutoringController::class, 'getLessons']);
 
 
 // book
@@ -47,8 +46,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // favorite feature
     Route::controller(TutorFavoritesController::class)->group(function () {
         Route::get('/tutor-favorites', 'index');
-        Route::post('/tutor-favorites', 'store');
-        Route::put('/tutor-favorites', 'update');
+        // Route::post('/tutor-favorites', 'store');
+        Route::put('/tutor-favorites', 'toggleFavorite');
         Route::delete('/tutor-favorites/{id}', 'destroy');
     });
 
@@ -57,7 +56,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // update profile
     Route::put('/users/{user}/profile', [UserProfileController::class, 'update']);
 
+
+    //tutor
+    Route::controller(TutorAPIController::class)->group(function () {
+        Route::get('/tutors', 'getTutors');
+        Route::get('/tutors/{tutor}', 'detailTutors');
+    });
+
     //booking
+
+    Route::controller(BookingController::class)->group(function () {
+        Route::post('/booking', 'bookDummy');
+    });
 
 
 

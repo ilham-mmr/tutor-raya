@@ -9,12 +9,63 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
 
 
-class TutorAPIController extends Controller {
-    public function getTutors(Request $request) {
+class TutorAPIController extends Controller
+{
+    public function getTutors(Request $request)
+    {
         $tutorsQuery = User::with(['tutorings.subject.category'])
             ->where('is_tutor', true)->whereHas('tutorings', function ($q) {
-                $q->whereDate('start_time', '>=', Carbon::today())->orderBy('start_time', 'ASC');
+                $q->where('status', '=', 'AVAILABLE')->whereDate('start_time', '>=', Carbon::today())->orderBy('start_time', 'ASC');
             })->inRandomOrder();
+
+        if ($request->keyword) {
+            $keywords = explode(' ', $request->keyword);
+            foreach ($keywords as $keyword) {
+                $tutorsQuery->where(function ($query) use ($keyword) {
+                    $query->whereHas('tutorings.subject.category', function ($query) use ($keyword) {
+                        $query->where('name','like', '%' . $keyword . '%');
+                    });
+                    $query->orWhereHas('tutorings.subject', function ($query) use ($keyword) {
+                        $query->where('name','like', '%' . $keyword . '%');
+                    });
+                        // ->orWhere('product.title', 'like', '%' . $keyword . '%')
+                        // ->orWhere('product.quantity', 'like', '%' . $keyword . '%')
+                        // ->orWhere('product.price', 'like', '%' . $keyword . '%');
+                });
+            }
+        }
+
+        // filters
+        $tutorsQuery->when(request('category') ?? false, function ($query, $category) {
+            return $query->whereHas('tutorings.subject.category', function ($query) use ($category) {
+                $query->where('name', $category);
+            });
+        });
+
+        $tutorsQuery->when(request('subject') ?? false, function ($query, $subject) {
+            return $query->whereHas('tutorings.subject', function ($query) use ($subject) {
+                $query->where('name', $subject);
+            });
+        });
+
+        $tutorsQuery->when(request('minPrice') ?? false, function ($query, $minPrice) {
+            return $query->whereHas('tutorings', function ($query) use ($minPrice) {
+                $query->where('hourly_price', '>=', $minPrice);
+            });
+        });
+
+        $tutorsQuery->when(request('maxPrice') ?? false, function ($query, $maxPrice) {
+            return $query->whereHas('tutorings', function ($query) use ($maxPrice) {
+                $query->where('hourly_price', '<=', $maxPrice);
+            });
+        });
+
+        $tutorsQuery->when(request('date') ?? false, function ($query, $date) {
+            return $query->whereHas('tutorings', function ($query) use ($date) {
+                $query->where('start_time', '<=', $date);
+            });
+        });
+
         if ($request->limit) {
             $tutorsQuery->limit($request->limit);
         }
@@ -37,7 +88,8 @@ class TutorAPIController extends Controller {
         // return $map->toJson();
     }
 
-    public function detailTutors(Request $request, $tutorId) {
+    public function detailTutors(Request $request, $tutorId)
+    {
 
 
         $tutor = User::with(['tutorings' => function ($q) {
