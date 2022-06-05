@@ -23,7 +23,7 @@ class AuthMobileController extends Controller {
 
         $email = $request->email;
         $name = $request->name;
-        // $photo = $request->photo;
+        $picture = $request->picture;
 
         $userCreated = User::firstOrCreate(
             [
@@ -32,10 +32,13 @@ class AuthMobileController extends Controller {
             [
                 'email_verified_at' => now(),
                 'name' => $name,
-
+                'picture' => $picture
             ]
         );
-
+        if($picture){
+            $userCreated->picture = $picture;
+            $userCreated->save();
+        }
         $token = $userCreated->createToken('tutor-raya')->plainTextToken;
 
         return response()->json([$userCreated], 200, ['api_token' => $token]);

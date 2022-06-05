@@ -29,6 +29,7 @@ class TutorAPIController extends Controller
                         $query->where('name','like', '%' . $keyword . '%');
                     });
                         // ->orWhere('product.title', 'like', '%' . $keyword . '%')
+
                         // ->orWhere('product.quantity', 'like', '%' . $keyword . '%')
                         // ->orWhere('product.price', 'like', '%' . $keyword . '%');
                 });
@@ -62,7 +63,8 @@ class TutorAPIController extends Controller
 
         $tutorsQuery->when(request('date') ?? false, function ($query, $date) {
             return $query->whereHas('tutorings', function ($query) use ($date) {
-                $query->where('start_time', '<=', $date);
+                $convertedDate = Carbon::parse( $date)->setTimezone('Asia/Jakarta');
+                $query->whereDate('start_time', '=', $convertedDate->toDateTimeString());
             });
         });
 
