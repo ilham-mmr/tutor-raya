@@ -102,11 +102,12 @@ class TutoringController extends Controller
 
     public function getLessons(Request $request)
     {
-        // $request->validate([
-        //     'user_id' => 'required',
-        // ]);
+        if($request->user_id) {
+            return response()->json(['message' => 'Not Found!'], 404);
 
-        $bookings = User::find(11)->bookings()->with(['tutoring.subject.category'])->get();
+        }
+
+        $bookings = User::find($request->user_id)->bookings()->with(['tutoring.subject.category'])->get();
         $data['lessons'] = $bookings->map(function ($booking) {
             return [
                 'id' => $booking->id,
