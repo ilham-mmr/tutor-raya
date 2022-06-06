@@ -102,7 +102,7 @@ class TutoringController extends Controller
 
     public function getLessons(Request $request)
     {
-        if($request->user_id) {
+        if(!$request->user_id) {
             return response()->json(['message' => 'Not Found!'], 404);
 
         }
