@@ -232,7 +232,8 @@ $('#datetimepicker').on('change.datetimepicker', function(event) {
 $('#hours').on('change', teachingHoursEvent);
 
 $('#categoryDropdown').on('change', () =>{
-    window.location.replace(`http://localhost:8000/home/tutor/add-tutoring?category=${$('#categoryDropdown').val()}`);
+    var APP_URL = '{{ URL::to('/') }}';
+    window.location.replace(`${APP_URL}/home/tutor/add-tutoring?category=${$('#categoryDropdown').val()}`);
 });
 
 
