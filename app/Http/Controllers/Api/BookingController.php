@@ -77,7 +77,7 @@ class BookingController extends Controller
         // if there are bookings that have tutoring id then it's invalid
 
         $booking = Booking::where('tutoring_id')->first();
-        if ($booking === null) {
+        if ($booking !== null) {
             return response()->json(['message' => 'Failed'], 403);
         }
 
