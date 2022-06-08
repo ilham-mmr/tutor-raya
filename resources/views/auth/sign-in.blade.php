@@ -37,7 +37,7 @@
                 <div class="social-auth-links text-center mb-3">
                     <p>- -</p>
                     <a href="{{ route('auth.web', 'facebook') }}" class="btn btn-block btn-primary">
-                        <i class="fab fa-facebook mr-2"></i> Sign in using Facebook (under development)
+                        <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
                     </a>
                     <a href="{{ route('auth.web', 'google') }}" class="btn btn-block btn-danger">
                         <i class="fab fa-google mr-2"></i> Sign in using Google
