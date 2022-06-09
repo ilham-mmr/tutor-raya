@@ -39,7 +39,7 @@ class TutorAPIController extends Controller
         // filters
         $tutorsQuery->when(request('category') ?? false, function ($query, $category) {
             return $query->whereHas('tutorings.subject.category', function ($query) use ($category) {
-                $query->where('name', $category);
+                $query->where('id', $category);
             });
         });
 
