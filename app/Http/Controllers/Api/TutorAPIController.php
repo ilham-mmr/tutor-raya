@@ -23,15 +23,15 @@ class TutorAPIController extends Controller
             foreach ($keywords as $keyword) {
                 $tutorsQuery->where(function ($query) use ($keyword) {
                     $query->whereHas('tutorings.subject.category', function ($query) use ($keyword) {
-                        $query->where('name','like', '%' . $keyword . '%');
+                        $query->where('name', 'like', '%' . $keyword . '%');
                     });
                     $query->orWhereHas('tutorings.subject', function ($query) use ($keyword) {
-                        $query->where('name','like', '%' . $keyword . '%');
+                        $query->where('name', 'like', '%' . $keyword . '%');
                     });
-                        // ->orWhere('product.title', 'like', '%' . $keyword . '%')
+                    // ->orWhere('product.title', 'like', '%' . $keyword . '%')
 
-                        // ->orWhere('product.quantity', 'like', '%' . $keyword . '%')
-                        // ->orWhere('product.price', 'like', '%' . $keyword . '%');
+                    // ->orWhere('product.quantity', 'like', '%' . $keyword . '%')
+                    // ->orWhere('product.price', 'like', '%' . $keyword . '%');
                 });
             }
         }
@@ -39,7 +39,14 @@ class TutorAPIController extends Controller
         // filters
         $tutorsQuery->when(request('category') ?? false, function ($query, $category) {
             return $query->whereHas('tutorings.subject.category', function ($query) use ($category) {
-                $query->where('id', $category);
+                $keywords = explode(',', $category);
+                $query->where(function ($query) use ($keywords) {
+                    if (count($keywords) > 0) {
+                        foreach ($keywords as $keyword) {
+                            $query->orWhere('id', $keyword);
+                        }
+                    }
+                });
             });
         });
 
@@ -63,7 +70,7 @@ class TutorAPIController extends Controller
 
         $tutorsQuery->when(request('date') ?? false, function ($query, $date) {
             return $query->whereHas('tutorings', function ($query) use ($date) {
-                $convertedDate = Carbon::parse( $date)->setTimezone('Asia/Jakarta');
+                $convertedDate = Carbon::parse($date)->setTimezone('Asia/Jakarta');
                 $query->whereDate('start_time', '=', $convertedDate->toDateTimeString());
             });
         });
