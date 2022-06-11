@@ -167,7 +167,7 @@ class BookingController extends Controller
         // setup variable midtrans
         $midtrans = [
             'transaction_details' => [
-                'order_id' => 'TR-' . '22', // LUX-100
+                'order_id' => 'TR-' . rand(), // LUX-100
                 'gross_amount' => (int) 223
             ],
             'customer_details' => [

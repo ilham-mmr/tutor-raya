@@ -78,3 +78,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 });
+
+
+Route::post('midtrans/callback', [BookingController::class, 'midtransCallback']);

@@ -69,5 +69,10 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 
+
+
 });
+
+Route::get('bookWithPaymentGateway', [BookingController::class, 'bookWithPaymentGateway']);
+
 

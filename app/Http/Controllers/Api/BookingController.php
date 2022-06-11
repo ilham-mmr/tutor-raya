@@ -7,6 +7,8 @@ use App\Models\Booking;
 use App\Models\Tutoring;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Midtrans\Notification;
+
 
 
 class BookingController extends Controller
@@ -97,5 +99,23 @@ class BookingController extends Controller
         ];
 
         // return success
+    }
+
+    public function midtransCallback(){
+        //config midtrans
+        Config::$serverKey = config('services.midtrans.serverKey');
+        Config::$isProduction = config('services.midtrans.isProduction');
+        Config::$isSanitized = config('services.midtrans.isSanitized');
+        Config::$is3ds = config('services.midtrans.is3ds');
+
+        //create midtranst notif instance
+        $notification = new Notification();
+        // assign variables
+        $status = $notification->transaction_status;
+        $type = $notification->payment_type;
+        $fraud = $notification->fraud_status;
+        $order_id = $notification->order_id;
+
+        dd($order_id);
     }
 }
