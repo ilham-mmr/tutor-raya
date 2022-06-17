@@ -28,10 +28,7 @@ class TutorAPIController extends Controller
                     $query->orWhereHas('tutorings.subject', function ($query) use ($keyword) {
                         $query->where('name', 'like', '%' . $keyword . '%');
                     });
-                    // ->orWhere('product.title', 'like', '%' . $keyword . '%')
 
-                    // ->orWhere('product.quantity', 'like', '%' . $keyword . '%')
-                    // ->orWhere('product.price', 'like', '%' . $keyword . '%');
                 });
             }
         }

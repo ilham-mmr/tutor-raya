@@ -70,13 +70,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
 
-
-
-    // middleware isTutor
-
-
-
-
 });
 
 
