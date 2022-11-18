@@ -1,3 +1,12 @@
+# PROJECT INFORMATION
+- a platform system that connects users with potential tutors.
+Tutor Raya consists of Laravel App (API&WEB) for tutors, while users use Flutter 
+- flutter code : [Click here!](https://github.com/ilham-mmr/flutter-tutor-raya)
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
